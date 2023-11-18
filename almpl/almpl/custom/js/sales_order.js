@@ -4,6 +4,8 @@ frappe.ui.form.on('Sales Order', {
             setTimeout(()=>{
                 // frm.remove_custom_button("Close", "Status");
                 frm.remove_custom_button("Re-open", "Status");
+				frm.remove_custom_button("Hold", "Status");
+
 
                    },550)
             if(frm.doc.status == 'Closed'){
