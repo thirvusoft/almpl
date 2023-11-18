@@ -1,7 +1,7 @@
 // Copyright (c) 2023, thirvusoft and contributors
 // For license information, please see license.txt
 /* eslint-disable */
-frappe.query_reports["Pending So Report"] = {
+frappe.query_reports["Sales Order Analysis"] = {
 	"filters": [
 		{
 			"fieldname": "company",
