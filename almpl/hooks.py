@@ -29,7 +29,7 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {"Sales Order" : "almpl/custom/js/sales_order.js"}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -64,13 +64,13 @@ app_license = "MIT"
 # ------------
 
 # before_install = "almpl.install.before_install"
-# after_install = "almpl.install.after_install"
+after_install = "almpl.almpl.custom.py.sales_order.create_fields"
 
 # Uninstallation
 # ------------
 
 # before_uninstall = "almpl.uninstall.before_uninstall"
-# after_uninstall = "almpl.uninstall.after_uninstall"
+after_uninstall = "almpl.almpl.custom.py.sales_order.delete_fields"
 
 # Integration Setup
 # ------------------
@@ -105,7 +105,9 @@ app_license = "MIT"
 # has_permission = {
 #	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
-
+override_whitelisted_methods = {
+	"frappe.desk.query_report.get_data_for_custom_field": "almpl.almpl.custom.py.query_report.get_data_for_custom_field"
+}
 # DocType Class
 # ---------------
 # Override standard doctype classes
