@@ -3,8 +3,8 @@ frappe.ui.form.on('Sales Order', {
         if(frm.doc.docstatus == 1){
             setTimeout(()=>{
                 // frm.remove_custom_button("Close", "Status");
-                frm.remove_custom_button("Re-open", "Status");
-				frm.remove_custom_button("Hold", "Status");
+                // frm.remove_custom_button("Re-open", "Status");
+				// frm.remove_custom_button("Hold", "Status");
 
 
                    },550)
