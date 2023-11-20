@@ -14,7 +14,7 @@ def create_sales_order(name,status):
     new_so.custom_parent_sales_order = so.name
     
     new_so.save()
-    new_so.submit()
+    # new_so.submit()
     if new_so.per_delivered < 100 and new_so.per_billed < 100 and new_so.docstatus == 1:
         status = 'To Deliver and Bill'
     elif (new_so.per_delivered == 100 or new_so.skip_delivery_note) and new_so.per_billed < 100 and new_so.docstatus == 1:
