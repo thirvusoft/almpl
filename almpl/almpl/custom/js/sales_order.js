@@ -8,7 +8,7 @@ frappe.ui.form.on('Sales Order', {
 
 
                    },550)
-            if(frm.doc.status == 'Closed'){
+            if(frm.doc.status == 'Closed' && frm.doc.per_delivered < 100){
 				frm.add_custom_button(__('SO for Pending Q'), () =>{
 					frm.trigger("close_sales_order");
 				},__('Create'));
