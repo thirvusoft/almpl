@@ -8,16 +8,19 @@ from frappe.utils import get_link_to_form
 def create_sales_order(name,status):
     so = frappe.get_doc('Sales Order',name)
     new_so = frappe.copy_doc(so)
-    row = []
-    for i in new_so.items:
+
+    items  = new_so.items
+    new_so.items = []
+    for i in items:
         i.qty = i.qty - i.delivered_qty
         i.delivered_qty = 0
+        
         if i.qty > 0:
-            row.append(i)
+            
+            del i.__dict__['idx']
+            new_so.append('items',i)
 
-    new_so.update({
-        'items':row
-    })
+
     new_so.custom_parent_sales_order = so.name
     
     # new_so.submit()
