@@ -12,7 +12,7 @@ def create_sales_order(name,status):
     for i in new_so.items:
         i.qty = i.qty - i.delivered_qty
         i.delivered_qty = 0
-        if i.qty:
+        if i.qty > 0:
             row.append(i)
 
     new_so.update({
