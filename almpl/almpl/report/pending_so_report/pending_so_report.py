@@ -72,7 +72,10 @@ def get_data(conditions, filters):
 			so.transaction_date as date,
 			soi.delivery_date as delivery_date,
 			so.name as sales_order,
-			so.status, so.customer, soi.item_code,
+			so.po_no as customer_po_number,
+			so.po_date as customer_po_date,
+			so.status, so.customer, soi.item_code,soi.item_name,soi.custom_roir_drawing_number,
+			so.custom_roir_revision,
 			DATEDIFF(CURRENT_DATE, soi.delivery_date) as delay_days,
 			IF(so.status in ('Completed','To Bill'), 0, (SELECT delay_days)) as delay,
 			soi.qty, soi.delivered_qty,
@@ -237,14 +240,28 @@ def get_columns(filters):
 			"fieldtype": "Link",
 			"options": "Sales Order Item",
 			"width": 160,
+			'hidden':1
 		},
-		{"label": _("Status"), "fieldname": "status", "fieldtype": "Data", "width": 130},
+		{
+			"label": _("Customer PO Number"),
+			"fieldname": "customer_po_number",
+			"fieldtype": "Data",
+			"width": 160
+		},
+				{
+			"label": _("Customer PO Date"),
+			"fieldname": "customer_po_date",
+			"fieldtype": "Data",
+			"width": 160
+		},
+		{"label": _("Status"),'hidden':1 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
 		{
 			"label": _("Customer"),
 			"fieldname": "customer",
 			"fieldtype": "Link",
 			"options": "Customer",
 			"width": 130,
+			'hidden':1 
 		},
 	]
 
@@ -259,11 +276,33 @@ def get_columns(filters):
 			}
 		)
 		columns.append(
-			{"label": _("Description"), "fieldname": "description", "fieldtype": "Small Text", "width": 100}
+			{
+				"label": _("Item Name"),
+				"fieldname": "item_name",
+				"fieldtype": "Data",
+				"width": 100,
+			}
+		)
+		columns.append(
+			{"label": _("Description"),'hidden':1, "fieldname": "description", "fieldtype": "Small Text", "width": 100}
 		)
 
 	columns.extend(
 		[
+ 			{
+				"label": _("Drawing Number"),
+				"fieldname": "custom_roir_drawing_number",
+				"fieldtype": "Data",
+				"width": 120,
+			},
+			{
+				"label": _("Release"),
+				"fieldname": "custom_roir_revision",
+				"fieldtype": "Data",
+				"width": 120,
+			},
+			{"label": _("Delivery Date"), "fieldname": "delivery_date", "fieldtype": "Date", "width": 120},
+
 			{
 				"label": _("Qty"),
 				"fieldname": "qty",
@@ -291,6 +330,8 @@ def get_columns(filters):
 				"fieldtype": "Float",
 				"width": 80,
 				"convertible": "qty",
+				'hidden':1 
+
 			},
 			{
 				"label": _("Qty to Bill"),
@@ -298,6 +339,7 @@ def get_columns(filters):
 				"fieldtype": "Float",
 				"width": 80,
 				"convertible": "qty",
+				'hidden':1 
 			},
 			{
 				"label": _("Amount"),
@@ -306,6 +348,7 @@ def get_columns(filters):
 				"width": 110,
 				"options": "Company:company:default_currency",
 				"convertible": "rate",
+				'hidden':1 
 			},
 			{
 				"label": _("Billed Amount"),
@@ -314,6 +357,7 @@ def get_columns(filters):
 				"width": 110,
 				"options": "Company:company:default_currency",
 				"convertible": "rate",
+				'hidden':1 
 			},
 			{
 				"label": _("Pending Amount"),
@@ -322,6 +366,7 @@ def get_columns(filters):
 				"width": 130,
 				"options": "Company:company:default_currency",
 				"convertible": "rate",
+				'hidden':1 
 			},
 			{
 				"label": _("Amount Delivered"),
@@ -330,14 +375,15 @@ def get_columns(filters):
 				"width": 100,
 				"options": "Company:company:default_currency",
 				"convertible": "rate",
+				'hidden':1 
 			},
-			{"label": _("Delivery Date"), "fieldname": "delivery_date", "fieldtype": "Date", "width": 120},
-			{"label": _("Delay (in Days)"), "fieldname": "delay", "fieldtype": "Data", "width": 100},
+			{"label": _("Delay (in Days)"), "fieldname": "delay", 'hidden':1 ,"fieldtype": "Data", "width": 100},
 			{
 				"label": _("Time Taken to Deliver"),
 				"fieldname": "time_taken_to_deliver",
 				"fieldtype": "Duration",
 				"width": 100,
+				'hidden':1 
 			},
 		]
 	)
@@ -349,6 +395,7 @@ def get_columns(filters):
 				"fieldtype": "Link",
 				"options": "Warehouse",
 				"width": 100,
+				'hidden':1 
 			}
 		)
 	columns.append(
@@ -358,6 +405,7 @@ def get_columns(filters):
 			"fieldtype": "Link",
 			"options": "Company",
 			"width": 100,
+			'hidden':1 
 		}
 	)
 
