@@ -36,8 +36,11 @@ def create_sales_order(name,status):
     new_so.status = status
     # new_so.set_status(update=True,status = status)
     
-    new_so.save()
-
+    if so.per_delivered < 100:
+        new_so.save()
+    else:
+        frappe.msgprint('No Pending Qty to Order ..')
+        
     link_doc = get_link_to_form("Sales Order", new_so.name)
 
     if link_doc:
