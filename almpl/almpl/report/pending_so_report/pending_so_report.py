@@ -50,7 +50,7 @@ def get_conditions(filters):
 	# Customisation Thirvsoft
 	# Start
 	if filters.get("delivery_from_date") and filters.get("delivery_to_date"):
-		conditions += " and so.delivery_date between %(delivery_from_date)s and %(delivery_to_date)s"
+		conditions += " and soi.delivery_date between %(delivery_from_date)s and %(delivery_to_date)s"
 	# End
 	
 	if filters.get("company"):
