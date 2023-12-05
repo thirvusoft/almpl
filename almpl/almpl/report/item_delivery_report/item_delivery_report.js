@@ -76,13 +76,16 @@ frappe.query_reports["Item Delivery Report"] = {
 					})
 				}
 				return options
-			}
+			},
+			'hidden':1
 		},
 		{
 			"fieldname": "group_by_so",
 			"label": __("Group by Sales Order"),
 			"fieldtype": "Check",
-			"default": 0
+			"default": 0,
+			'hidden':1
+
 		},
 
 	],
