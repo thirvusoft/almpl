@@ -84,6 +84,7 @@ frappe.query_reports["Item Delivery Report"] = {
 			"fieldtype": "Link",
 			"width": "80",
 			'options':'Item',
+			'hidden':1,
 			"get_query": () =>{
 					return {
 						filters: { "disabled": 0,'is_sales_item':1 }

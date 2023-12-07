@@ -269,7 +269,7 @@ def get_columns(filters):
 			"fieldtype": "Data",
 			"width": 160
 		},
-		{"label": _("Status"),'hidden':1 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
+		{"label": _("Status"),'hidden':0 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
 		{
 			"label": _("Customer"),
 			"fieldname": "customer",
