@@ -30,6 +30,7 @@ def execute(filters=None):
 	return columns, data, None, chart_data
 
 def validate_filters(filters):
+	
 	# Customisation Thirvsoft
 	# Start
 	delivery_from_date,delivery_to_date  = filters.get("delivery_from_date"), filters.get("delivery_to_date")
@@ -43,7 +44,14 @@ def validate_filters(filters):
 	# End
 
 def get_conditions(filters):
-	conditions = "and (soi.qty - soi.delivered_qty) > 0 "
+	
+	if not filters.get('based_on_item'):
+		conditions = ""
+		if filters.get("from_date") and filters.get("to_date"):
+			conditions += " and so.transaction_date between %(from_date)s and %(to_date)s"
+			
+	elif filters.get('based_on_item'):
+		conditions = "and (soi.qty - soi.delivered_qty) > 0 "
 
 	# Customisation Thirvsoft
 	# Start
@@ -57,6 +65,8 @@ def get_conditions(filters):
 	if filters.get("company"):
 		conditions += " and so.company = %(company)s"
 
+	if filters.get("sales_order"):
+		conditions += " and so.name in %(sales_order)s"
 
 	if filters.get("status"):
 		conditions += " and so.status in %(status)s"
@@ -253,7 +263,7 @@ def get_columns(filters):
 			"fieldtype": "Data",
 			"width": 160
 		},
-		{"label": _("Status"),'hidden':1 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
+		{"label": _("Status"),'hidden':0 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
 		{
 			"label": _("Customer"),
 			"fieldname": "customer",

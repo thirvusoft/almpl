@@ -5,6 +5,20 @@
 frappe.query_reports["Item Delivery Report"] = {
 	"filters": [
 		{
+			'fieldname':"based_on_item",
+			"label": __("Based on Item Delivery"),
+			"fieldtype": "Check",
+			"default": 0,
+			on_change: function() {
+				let filter_based_on = frappe.query_report.get_filter_value('based_on_item');
+				frappe.query_report.toggle_filter_display('from_date', filter_based_on === 1);
+				frappe.query_report.toggle_filter_display('to_date', filter_based_on === 1);
+				frappe.query_report.toggle_filter_display('item', filter_based_on === 0);
+
+				frappe.query_report.refresh();
+			}
+		},
+		{
 			"fieldname": "company",
 			"label": __("Company"),
 			"fieldtype": "Link",
@@ -12,6 +26,22 @@ frappe.query_reports["Item Delivery Report"] = {
 			"options": "Company",
 			"reqd": 1,
 			"default": frappe.defaults.get_default("company")
+		},	
+		{
+			"fieldname":"from_date",
+			"label": __("From Date"),
+			"fieldtype": "Date",
+			"width": "80",
+			'default':frappe.datetime.year_start(),
+			"reqd": 1,
+		},
+		{
+			"fieldname":"to_date",
+			"label": __("To Date"),
+			"fieldtype": "Date",
+			"width": "80",
+			"reqd": 1,
+			"default": frappe.datetime.get_today()
 		},	
 		// Customisation Thirvsoft
 		// Start
@@ -34,8 +64,23 @@ frappe.query_reports["Item Delivery Report"] = {
 		},
 		// End
 		{
+			"fieldname": "sales_order",
+			"label": __("Sales Order"),
+			"fieldtype": "MultiSelectList",
+			"width": "80",
+			"options": "Sales Order",
+			"get_data": function(txt) {
+				return frappe.db.get_link_options("Sales Order", txt);
+			},
+			"get_query": () =>{
+				return {
+					filters: { "docstatus": 1 }
+				}
+			}
+		},
+		{
 			"fieldname": "item",
-			"label": __("Item"),
+			"label": __("Sales Order Item"),
 			"fieldtype": "Link",
 			"width": "80",
 			'options':'Item',
@@ -45,21 +90,6 @@ frappe.query_reports["Item Delivery Report"] = {
 					}
 				}
 		},
-		// {
-		// 	"fieldname": "sales_order",
-		// 	"label": __("Sales Order"),
-		// 	"fieldtype": "MultiSelectList",
-		// 	"width": "80",
-		// 	"options": "Sales Order",
-		// 	"get_data": function(txt) {
-		// 		return frappe.db.get_link_options("Sales Order", txt);
-		// 	},
-		// 	"get_query": () =>{
-		// 		return {
-		// 			filters: { "docstatus": 1 }
-		// 		}
-		// 	}
-		// },
 		{
 			"fieldname": "status",
 			"label": __("Status"),
@@ -77,16 +107,16 @@ frappe.query_reports["Item Delivery Report"] = {
 				}
 				return options
 			},
-			'hidden':1
+			'hidden':0
 		},
 		{
 			"fieldname": "group_by_so",
 			"label": __("Group by Sales Order"),
 			"fieldtype": "Check",
 			"default": 0,
-			'hidden':1
+			'hidden':0
 
-		},
+		}		
 
 	],
 	onload: function() {
