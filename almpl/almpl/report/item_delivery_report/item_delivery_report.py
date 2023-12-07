@@ -30,16 +30,23 @@ def execute(filters=None):
 	return columns, data, None, chart_data
 
 def validate_filters(filters):
-	
+	from_date, to_date = filters.get("from_date"), filters.get("to_date")
 	# Customisation Thirvsoft
 	# Start
 	delivery_from_date,delivery_to_date  = filters.get("delivery_from_date"), filters.get("delivery_to_date")
+	if not filters.get('based_on_item'):
+		if not from_date and to_date and not delivery_from_date and not delivery_to_date:
+			frappe.throw(_("From and To Dates are required."))
 
-	if not delivery_from_date and not delivery_to_date:
-		frappe.throw(_("From and To Dates are required."))
+		elif date_diff(to_date, from_date) < 0 or date_diff(delivery_to_date, delivery_from_date) < 0 :
+			frappe.throw(_("To Date cannot be before From Date."))
+	
+	elif filters.get('based_on_item'):
+		if not delivery_from_date and not delivery_to_date:
+			frappe.throw(_("From and To Dates are required."))
 
-	elif date_diff(delivery_to_date, delivery_from_date) < 0 :
-		frappe.throw(_("To Date cannot be before From Date."))
+		elif date_diff(delivery_to_date, delivery_from_date) < 0 :
+			frappe.throw(_("To Date cannot be before From Date."))
 
 	# End
 
@@ -103,7 +110,6 @@ def get_data(conditions, filters):
 		LEFT JOIN `tabSales Invoice Item` sii
 			ON sii.so_detail = soi.name and sii.docstatus = 1
 		WHERE
-			
 			soi.parent = so.name
 			and so.status not in ('Stopped', 'Closed', 'On Hold')
 			and so.docstatus = 1
@@ -263,7 +269,7 @@ def get_columns(filters):
 			"fieldtype": "Data",
 			"width": 160
 		},
-		{"label": _("Status"),'hidden':0 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
+		{"label": _("Status"),'hidden':1 ,"fieldname": "status", "fieldtype": "Data", "width": 130},
 		{
 			"label": _("Customer"),
 			"fieldname": "customer",
