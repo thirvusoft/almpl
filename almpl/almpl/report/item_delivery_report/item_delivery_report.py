@@ -53,12 +53,13 @@ def validate_filters(filters):
 def get_conditions(filters):
 	
 	if not filters.get('based_on_item'):
-		conditions = ""
+		conditions = "and so.status in ('Completed', 'On Hold', 'Closed', 'To Deliver and Bill')"
 		if filters.get("from_date") and filters.get("to_date"):
 			conditions += " and so.transaction_date between %(from_date)s and %(to_date)s"
 			
 	elif filters.get('based_on_item'):
-		conditions = "and (soi.qty - soi.delivered_qty) > 0 "
+
+		conditions = "and (soi.qty - soi.delivered_qty) > 0 and so.status in ('On Hold', 'Closed', 'To Deliver and Bill')"
 
 	# Customisation Thirvsoft
 	# Start
@@ -111,7 +112,6 @@ def get_data(conditions, filters):
 			ON sii.so_detail = soi.name and sii.docstatus = 1
 		WHERE
 			soi.parent = so.name
-			and so.status not in ('Stopped', 'Closed', 'On Hold')
 			and so.docstatus = 1
 			{conditions}
 		GROUP BY soi.name

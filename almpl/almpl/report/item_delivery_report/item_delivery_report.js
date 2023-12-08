@@ -6,7 +6,7 @@ frappe.query_reports["Item Delivery Report"] = {
 	"filters": [
 		{
 			'fieldname':"based_on_item",
-			"label": __("Based on Item Delivery"),
+			"label": __("Show Pending Items Only"),
 			"fieldtype": "Check",
 			"default": 0,
 			on_change: function() {
