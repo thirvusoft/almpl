@@ -53,13 +53,13 @@ def validate_filters(filters):
 def get_conditions(filters):
 	
 	if not filters.get('based_on_item'):
-		conditions = "and so.status in ('Completed', 'On Hold', 'Closed', 'To Deliver and Bill')"
+		conditions = "and so.status not in ('Stopped') "
 		if filters.get("from_date") and filters.get("to_date"):
 			conditions += " and so.transaction_date between %(from_date)s and %(to_date)s"
 			
 	elif filters.get('based_on_item'):
 
-		conditions = "and (soi.qty - soi.delivered_qty) > 0 and so.status in ('On Hold', 'Closed', 'To Deliver and Bill')"
+		conditions = "and (soi.qty - soi.delivered_qty) > 0 and so.status not in ('On Hold','Closed','Completed','Stopped')"
 
 	# Customisation Thirvsoft
 	# Start
@@ -95,7 +95,11 @@ def get_data(conditions, filters):
 			DATEDIFF(CURRENT_DATE, soi.delivery_date) as delay_days,
 			IF(so.status in ('Completed','To Bill'), 0, (SELECT delay_days)) as delay,
 			soi.qty, soi.delivered_qty,
-			(soi.qty - soi.delivered_qty) AS pending_qty,
+			CASE
+				WHEN so.status not in ('Closed','On Hold') THEN (soi.qty - soi.delivered_qty)
+				ELSE 0
+			END
+			AS pending_qty,
 			IFNULL(SUM(sii.qty), 0) as billed_qty,
 			soi.base_amount as amount,
 			(soi.delivered_qty * soi.base_rate) as delivered_qty_amount,
